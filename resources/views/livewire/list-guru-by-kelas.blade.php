@@ -1,42 +1,75 @@
-<div class="container mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Daftar Guru Berdasarkan Kelas</h1>
+<div class="container mx-auto p-5">
+    <h1 class="text-2xl font-semibold mb-5">Daftar Guru Berdasarkan Kelas</h1>
 
-    <!-- Dropdown Pilih Kelas -->
-    <div class="mb-6">
-        <label class="block text-gray-700">Pilih Kelas</label>
-        <select wire:model.live="selectedKelasId" class="w-full p-2 border rounded">
-            <option value="">Pilih Kelas</option>
-            @foreach($kelas as $k)
-                <option value="{{ $k->id }}">{{ $k->nama_kelas }}</option>
-            @endforeach
-        </select>
-    </div>
+    @php
+        $currentKelas = null;
+    @endphp
 
-    <!-- Tabel Daftar Guru -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border p-2">Nama</th>
-                    <th class="border p-2">NIP</th>
-                    <th class="border p-2">Mata Pelajaran</th>
-                    <th class="border p-2">Kelas</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($guru as $g)
-                    <tr>
-                        <td class="border p-2">{{ $g->nama }}</td>
-                        <td class="border p-2">{{ $g->nip }}</td>
-                        <td class="border p-2">{{ $g->mata_pelajaran }}</td>
-                        <td class="border p-2">{{ $g->kelas->pluck('nama_kelas')->join(', ') ?: '-' }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="border p-2 text-center">Pilih kelas untuk melihat daftar guru.</td>
-                    </tr>
-                @endforelse
-            </tbody>
+    @forelse($guru->sortBy(function($guru) { return $guru->kelas->first()->nama_kelas ?? ''; }) as $g)
+        @if ($g->kelas->isNotEmpty() && $currentKelas !== $g->kelas->first()->nama_kelas)
+            @if ($currentKelas !== null)
+                </tbody>
+                </table>
+                </div>
+            @endif
+            <div class="bg-white p-4 rounded-lg shadow mb-5">
+                <h2 class="text-lg font-medium mb-3 text-gray-800">
+                    Kelas: {{ $g->kelas->first()->nama_kelas ?? 'Tidak Ada Kelas' }}
+                </h2>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border p-2 text-left">Nama Guru</th>
+                            <th class="border p-2 text-left">NIP</th>
+                            <th class="border p-2 text-left">Mata Pelajaran</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        @endif
+        @if ($g->kelas->isNotEmpty())
+            <tr>
+                <td class="border p-2">{{ $g->nama }}</td>
+                <td class="border p-2">{{ $g->nip }}</td>
+                <td class="border p-2">{{ $g->mata_pelajaran }}</td>
+            </tr>
+        @endif
+        @php
+            $currentKelas = $g->kelas->first()->nama_kelas ?? null;
+        @endphp
+    @empty
+        <div class="bg-white p-4 rounded-lg shadow">
+            <p class="text-center text-gray-500">Tidak ada data guru.</p>
+        </div>
+    @endforelse
+
+    @if ($guru->isNotEmpty())
+        </tbody>
         </table>
-    </div>
+        </div>
+    @endif
+
+    
+    @if ($guru->where('kelas', 'isEmpty')->isNotEmpty())
+        <div class="bg-white p-4 rounded-lg shadow mb-5">
+            <h2 class="text-lg font-medium mb-3 text-gray-800">Kelas: Tidak Ada Kelas</h2>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2 text-left">Nama Guru</th>
+                        <th class="border p-2 text-left">NIP</th>
+                        <th class="border p-2 text-left">Mata Pelajaran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($guru->where('kelas', 'isEmpty') as $g)
+                        <tr>
+                            <td class="border p-2">{{ $g->nama }}</td>
+                            <td class="border p-2">{{ $g->nip }}</td>
+                            <td class="border p-2">{{ $g->mata_pelajaran }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 </div>

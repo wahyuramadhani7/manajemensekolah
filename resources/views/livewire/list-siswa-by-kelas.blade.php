@@ -1,40 +1,46 @@
-<div class="container mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Daftar Siswa Berdasarkan Kelas</h1>
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6">Daftar Siswa Per Kelas</h1>
 
-    <!-- Dropdown Pilih Kelas -->
-    <div class="mb-6">
-        <label class="block text-gray-700">Pilih Kelas</label>
-        <select wire:model.live="selectedKelasId" class="w-full p-2 border rounded">
-            <option value="">Pilih Kelas</option>
-            @foreach($kelas as $k)
-                <option value="{{ $k->id }}">{{ $k->nama_kelas }}</option>
-            @endforeach
-        </select>
-    </div>
+    @php
+        $currentKelasId = null;
+    @endphp
 
-    <!-- Tabel Daftar Siswa -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border p-2">Nama</th>
-                    <th class="border p-2">NIS</th>
-                    <th class="border p-2">Kelas</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($siswa as $s)
-                    <tr>
-                        <td class="border p-2">{{ $s->nama }}</td>
-                        <td class="border p-2">{{ $s->nis }}</td>
-                        <td class="border p-2">{{ $s->kelas ? $s->kelas->nama_kelas : '-' }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="border p-2 text-center">Pilih kelas untuk melihat daftar siswa.</td>
-                    </tr>
-                @endforelse
-            </tbody>
+    @forelse($siswa as $s)
+        @if ($currentKelasId !== $s->kelas_id)
+            @if ($currentKelasId !== null)
+                </tbody>
+                </table>
+                </div>
+            @endif
+            <div class="bg-gray-100 p-5 rounded-md shadow-md mb-4">
+                <h2 class="text-lg font-semibold mb-3">
+                    Kelas: {{ $s->kelas ? $s->kelas->nama_kelas : 'Belum Ada Kelas' }}
+                </h2>
+                <table class="w-full border-collapse bg-white">
+                    <thead>
+                        <tr class="bg-gray-300">
+                            <th class="border p-3 text-left">Nama Siswa</th>
+                            <th class="border p-3 text-left">NIS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        @endif
+                        <tr>
+                            <td class="border p-3">{{ $s->nama }}</td>
+                            <td class="border p-3">{{ $s->nis }}</td>
+                        </tr>
+        @php
+            $currentKelasId = $s->kelas_id;
+        @endphp
+    @empty
+        <div class="bg-gray-100 p-5 rounded-md shadow-md">
+            <p class="text-center text-gray-600">Tidak ada data siswa.</p>
+        </div>
+    @endforelse
+
+    @if ($siswa->isNotEmpty())
+        </tbody>
         </table>
-    </div>
+        </div>
+    @endif
 </div>
