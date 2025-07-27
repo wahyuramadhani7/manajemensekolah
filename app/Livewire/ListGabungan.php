@@ -16,6 +16,7 @@ class ListGabungan extends Component
             ->orderBy('kelas_id')
             ->get()
             ->groupBy('kelas_id');
+
         $guru = Guru::with(['kelas' => function ($query) {
             $query->orderBy('nama_kelas');
         }])
@@ -23,6 +24,7 @@ class ListGabungan extends Component
             ->groupBy(function ($guru) {
                 return $guru->kelas->isNotEmpty() ? $guru->kelas->first()->id : 'no_class';
             });
+
         $this->dataGabungan = $siswa->map(function ($siswaPerKelas, $kelasId) use ($guru) {
             $kelas = $siswaPerKelas->first()->kelas;
             return [
@@ -32,12 +34,15 @@ class ListGabungan extends Component
                     return [
                         'nama' => $siswa->nama,
                         'nis' => $siswa->nis,
+                        'peran' => 'Siswa',
+                        'mata_pelajaran' => '',
                     ];
                 })->toArray(),
                 'guru' => isset($guru[$kelasId]) ? $guru[$kelasId]->map(function ($g) {
                     return [
                         'nama' => $g->nama,
-                        'nip' => $g->nip,
+                        'nis' => $g->nip,
+                        'peran' => 'Guru',
                         'mata_pelajaran' => $g->mata_pelajaran,
                     ];
                 })->toArray() : [],
@@ -50,14 +55,15 @@ class ListGabungan extends Component
                 'guru' => isset($guru['no_class']) ? $guru['no_class']->map(function ($g) {
                     return [
                         'nama' => $g->nama,
-                        'nip' => $g->nip,
+                        'nis' => $g->nip,
+                        'peran' => 'Guru',
                         'mata_pelajaran' => $g->mata_pelajaran,
                     ];
                 })->toArray() : [],
             ]
         ])->filter(function ($data) {
             return !empty($data['siswa']) || !empty($data['guru']);
-        })->sortBy('kelas_nama')->values();
+        })->sortBy('kelas_nama')->values()->toArray();
     }
 
     public function render()

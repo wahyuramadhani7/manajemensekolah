@@ -1,46 +1,32 @@
-<div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">Daftar Siswa Per Kelas</h1>
+<div class="container mx-auto p-5">
+    <h1 class="text-2xl font-semibold mb-5 text-gray-900">Daftar Siswa Per Kelas</h1>
 
-    @php
-        $currentKelasId = null;
-    @endphp
-
-    @forelse($siswa as $s)
-        @if ($currentKelasId !== $s->kelas_id)
-            @if ($currentKelasId !== null)
-                </tbody>
-                </table>
-                </div>
-            @endif
-            <div class="bg-gray-100 p-5 rounded-md shadow-md mb-4">
-                <h2 class="text-lg font-semibold mb-3">
-                    Kelas: {{ $s->kelas ? $s->kelas->nama_kelas : 'Belum Ada Kelas' }}
-                </h2>
-                <table class="w-full border-collapse bg-white">
-                    <thead>
-                        <tr class="bg-gray-300">
-                            <th class="border p-3 text-left">Nama Siswa</th>
-                            <th class="border p-3 text-left">NIS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        @endif
+    <div class="bg-white p-4 rounded-lg shadow">
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border p-2 text-left">Kelas</th>
+                    <th class="border p-2 text-left">Nama Siswa</th>
+                    <th class="border p-2 text-left">NIS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($siswaByKelas as $kelas_id => $kelasData)
+                    @foreach($kelasData['siswa'] as $index => $s)
                         <tr>
-                            <td class="border p-3">{{ $s->nama }}</td>
-                            <td class="border p-3">{{ $s->nis }}</td>
+                            @if($index === 0)
+                                <td class="border p-2" rowspan="{{ count($kelasData['siswa']) }}">{{ $kelasData['kelas_name'] }}</td>
+                            @endif
+                            <td class="border p-2">{{ $s['nama'] }}</td>
+                            <td class="border p-2">{{ $s['nis'] }}</td>
                         </tr>
-        @php
-            $currentKelasId = $s->kelas_id;
-        @endphp
-    @empty
-        <div class="bg-gray-100 p-5 rounded-md shadow-md">
-            <p class="text-center text-gray-600">Tidak ada data siswa.</p>
-        </div>
-    @endforelse
-
-    @if ($siswa->isNotEmpty())
-        </tbody>
+                    @endforeach
+                @empty
+                    <tr>
+                        <td colspan="3" class="border p-2 text-center text-gray-600">Tidak ada data siswa.</td>
+                    </tr>
+                @endforelse
+            </tbody>
         </table>
-        </div>
-    @endif
+    </div>
 </div>
