@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\ManageSiswa;
 use App\Livewire\ManageKelas;
 use App\Livewire\ManageGuru;
+use App\Livewire\ManageOrangTua;
 use App\Livewire\ListSiswaByKelas;
 use App\Livewire\ListGuruByKelas;
 use App\Livewire\ListGabungan;
@@ -26,6 +27,7 @@ Route::get('/guru', ManageGuru::class)->middleware(['auth'])->name('guru');
 Route::get('/siswa-by-kelas', ListSiswaByKelas::class)->middleware(['auth'])->name('siswa.by.kelas');
 Route::get('/guru-by-kelas', ListGuruByKelas::class)->middleware(['auth'])->name('guru.by.kelas');
 Route::get('/laporan-gabungan', ListGabungan::class)->middleware(['auth'])->name('laporan.gabungan');
+Route::get('/orang-tua', ManageOrangTua::class)->name('orang-tua');
 
 // Rute logout
 Route::post('/logout', function () {

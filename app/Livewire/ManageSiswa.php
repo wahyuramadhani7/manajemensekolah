@@ -17,7 +17,7 @@ class ManageSiswa extends Component
 
     public function mount()
     {
-        $this->siswa = Siswa::with('kelas')->get();
+        $this->siswa = Siswa::with(['kelas', 'orangTua'])->get();
         $this->kelas = Kelas::all();
     }
 
@@ -30,7 +30,6 @@ class ManageSiswa extends Component
         ]);
 
         if ($this->editId) {
-            // Update
             $siswa = Siswa::find($this->editId);
             $siswa->update([
                 'nama' => $this->nama,
@@ -38,7 +37,6 @@ class ManageSiswa extends Component
                 'kelas_id' => $this->kelas_id,
             ]);
         } else {
-            // Create
             Siswa::create([
                 'nama' => $this->nama,
                 'nis' => $this->nis,
@@ -47,7 +45,7 @@ class ManageSiswa extends Component
         }
 
         $this->resetForm();
-        $this->siswa = Siswa::with('kelas')->get(); // Refresh daftar siswa
+        $this->siswa = Siswa::with(['kelas', 'orangTua'])->get();
     }
 
     public function edit($id)
@@ -62,7 +60,7 @@ class ManageSiswa extends Component
     public function delete($id)
     {
         Siswa::find($id)->delete();
-        $this->siswa = Siswa::with('kelas')->get(); // Refresh daftar siswa
+        $this->siswa = Siswa::with(['kelas', 'orangTua'])->get();
     }
 
     public function resetForm()
@@ -78,4 +76,3 @@ class ManageSiswa extends Component
         return view('livewire.manage-siswa')->layout('layouts.app');
     }
 }
-?>

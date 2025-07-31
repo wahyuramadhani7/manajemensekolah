@@ -41,6 +41,7 @@
                     <th class="border p-2">Nama</th>
                     <th class="border p-2">NIS</th>
                     <th class="border p-2">Kelas</th>
+                    <th class="border p-2">Orang Tua</th>
                     <th class="border p-2">Aksi</th>
                 </tr>
             </thead>
@@ -51,13 +52,20 @@
                         <td class="border p-2">{{ $s->nis }}</td>
                         <td class="border p-2">{{ $s->kelas ? $s->kelas->nama_kelas : '-' }}</td>
                         <td class="border p-2">
+                            @if($s->orangTua->isNotEmpty())
+                                {{ $s->orangTua->pluck('nama')->implode(', ') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="border p-2">
                             <button wire:click="edit({{ $s->id }})" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">Edit</button>
                             <button wire:click="delete({{ $s->id }})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Hapus</button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="border p-2 text-center">Belum ada data siswa.</td>
+                        <td colspan="5" class="border p-2 text-center">Belum ada data siswa.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -94,6 +94,20 @@
                 </div>
             </a>
 
+            <!-- Kelola Orang Tua -->
+            <a href="/orang-tua" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-user-friends text-yellow-600 text-xl"></i>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Kelola Orang Tua</h3>
+                    <p class="text-gray-600 text-sm">Tambah, edit, dan kelola data orang tua</p>
+                </div>
+            </a>
+
             <!-- Siswa Berdasarkan Kelas -->
             <a href="/siswa-by-kelas" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
                 <div class="p-6">
@@ -136,8 +150,6 @@
                 </div>
             </a>
         </div>
-
-       
     </div>
 
     @livewireScripts
